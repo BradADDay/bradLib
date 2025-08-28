@@ -4,94 +4,97 @@ from decimal import Decimal
 import numpy as np
 import matplotlib.pyplot as plt
 
-def csv2tab(file, caption = "", alignment = "", rnd = None):
-    "Convert a csv file to latex table"
+class csv2tab():
     
-    file = pd.read_csv(file, header=0)
-    
-    file = numFormat(file)
-    
-    header = ""
-    dataStr = ""
-    
-    if alignment == "":
-        for i in file.columns:
-            alignment+="c"
-    
-    for col in file.columns:
-        header += col
-        if col != file.columns[len(file.columns)-1]:
-            header += " & "
-    
-    for row in file.index:
+    def __init__(self, file, caption = "", alignment = "", rnd = None):
+
+        "Convert a csv file to latex table"
+        
+        file = pd.read_csv(file, header=0)
+        
+        file = self.numFormat(file)
+        
+        header = ""
+        dataStr = ""
+        
+        if alignment == "":
+            for i in file.columns:
+                alignment+="c"
+        
         for col in file.columns:
-            
-            value = file.loc[row,col]
+            header += col
+            if col != file.columns[len(file.columns)-1]:
+                header += " & "
+        
+        for row in file.index:
+            for col in file.columns:
                 
-            dataStr += str(value)
-            
-            if (col != file.columns[-1]):
-                dataStr += " & "
+                value = file.loc[row,col]
+                    
+                dataStr += str(value)
                 
-        dataStr += r"\\" + "\n"
-    
-    tableStart = r"""\begin{table}[htb]
+                if (col != file.columns[-1]):
+                    dataStr += " & "
+                    
+            dataStr += r"\\" + "\n"
+        
+        tableStart = r"""\begin{table}[htb]
 \centering""" + r"\caption{" + caption + r"}" + r"""
 \begin{tabular}{""" + alignment + r"}" + r"""
 \toprule
 """
-    
-    tableEnd = r"""\bottomrule
+        
+        tableEnd = r"""\bottomrule
 \end{tabular}
 \label{tab:}
 \end{table}"""
-    
-    print(tableStart + header + "\\\\\n\\midrule\n" + dataStr + tableEnd)
-
-def sfRound(x, sf=1):
-    """Round to given significant figures"""
-    return float('%s' % float('%.1g' % x))
-
-def numFormat(data):
-    
-    newCols = []
-    remCols = []
-    cols = list(data.columns)
-    
-    for i in range(len(data.columns)):
         
-        if cols[i].find("Error") == -1:
-            column = []
+        print(tableStart + header + "\\\\\n\\midrule\n" + dataStr + tableEnd)
+    
+    def sfRound(self, x, sf=1):
+        """Round to given significant figures"""
+        return float('%s' % float('%.1g' % x))
+    
+    def numFormat(self, data):
+    
+        newCols = []
+        remCols = []
+        cols = list(data.columns)
+        
+        for i in range(len(data.columns)):
             
-            if cols[i] == cols[len(cols)-1]:
-                newCols.append(data[cols[i]])
-            
-            elif cols[i+1].find("Error") != -1:
+            if cols[i].find("Error") == -1:
+                column = []
                 
-                for j in data.index:
-                    data.loc[j, cols[i+1]] = sfRound(data.loc[j, cols[i+1]])
-                data[cols[i+1]] = data[cols[i+1]].astype(str)
+                if cols[i] == cols[len(cols)-1]:
+                    newCols.append(data[cols[i]])
+                
+                elif cols[i+1].find("Error") != -1:
                     
-                for j in data.index:
-                    rnd = int(('%.0E' % Decimal(data.loc[j,cols[i+1]]))[-2:])
-                    
-                    data.loc[j, cols[i]] = round(data.loc[j, cols[i]], rnd)
-                    
-                    column.append(f"${data.loc[j, cols[i]]}\\pm{data.loc[j, cols[i+1]]}$")
-                    
-                newCols.append(column)
-                remCols.append(cols[i+1])
-            
+                    for j in data.index:
+                        data.loc[j, cols[i+1]] = self.sfRound(data.loc[j, cols[i+1]])
+                    data[cols[i+1]] = data[cols[i+1]].astype(str)
+                        
+                    for j in data.index:
+                        rnd = int(('%.0E' % Decimal(data.loc[j,cols[i+1]]))[-2:])
+                        
+                        data.loc[j, cols[i]] = round(data.loc[j, cols[i]], rnd)
+                        
+                        column.append(f"${data.loc[j, cols[i]]}\\pm{data.loc[j, cols[i+1]]}$")
+                        
+                    newCols.append(column)
+                    remCols.append(cols[i+1])
+                
+                else:
+                    newCols.append(data[cols[i]])
+                
             else:
-                newCols.append(data[cols[i]])
+                pass
             
-        else:
-            pass
-        
-    for col in remCols:
-        cols.remove(col)
-        
-    return pd.DataFrame(np.array(newCols).T, columns=cols)
+        for col in remCols:
+            cols.remove(col)
+            
+        return pd.DataFrame(np.array(newCols).T, columns=cols)
 
 class plotter():
     """
