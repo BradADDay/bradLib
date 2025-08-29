@@ -9,5 +9,4 @@ Will update as I create more utilities.
 |------------|-----------------------------------------------------------------------|
 |`file`      | `str`, the path to the csv file, either relative or absolute          |
 |`caption`   | `str`, text to go in the table caption                                |
-|`alignment` | `str`, the alignment for each column, must match the number of columns|
-|            |        can be: `l`,`r`, or `c` for left, right or centered            |
+|`alignment` | `str`, the alignment for each column, must match the number of columns can be: `l`,`r`, or `c` for left, right or centered|
