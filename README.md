@@ -7,3 +7,4 @@ Will update as I create more utilities.
 
 |Parameters|
 |----------|
+|`file`: `str`, the path to the csv file|
