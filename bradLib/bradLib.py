@@ -141,9 +141,9 @@ class plotter():
         if label != None:
             self.ax.legend(loc=legendLoc)       # Applying a legend to the plot
         
-    def scatter(self, data, xyLabels = [None, None], label=None, legendLoc="best", c=None, s=10, marker = "o"):
+    def scatter(self, data, xyLabels = [None, None], label=None, legendLoc="best", colour=None, markerSize=10, markerStyle = "o"):
         xData, yData = data
-        self.ax.scatter(xData, yData, label=label, c=c, s=s, marker=marker)  # Plotting the data as a scatter
+        self.ax.scatter(xData, yData, label=label, c=colour, s=markerSize, marker=markerStyle)  # Plotting the data as a scatter
         self.ax.set_xlabel(xyLabels[0])             # Setting the x, y axis labels
         self.ax.set_ylabel(xyLabels[1])
         if label != None:
