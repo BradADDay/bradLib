@@ -3,6 +3,90 @@ import pandas as pd
 from decimal import Decimal
 import numpy as np
 import matplotlib.pyplot as plt
+import sympy as sy
+
+def symsum(lst):
+    sm = lst[0]
+    for i in lst[1:]:
+        sm += i 
+    return sm
+
+class errorPropagate():
+    """
+    A collection of methods to produce the error propagation expression 
+    for a given equation
+    ----------
+    Parameters
+    f: The expression to differentiate
+    
+    dVars: A list of the variables to differentiate with respect to
+    
+    tex: Whether to output in LaTeX syntax
+    
+    py: Whether to output in python syntax
+    ----------
+    
+    """
+    def __init__(self, f, dVars, tex = True, py = False):
+        
+        
+        function= f[0]
+        errorSymbols=[]
+        self.fSymbol = sy.symbols(f[1])
+        self.dVars = dVars
+        
+        for dVar in dVars:
+            errorSymbols.append(f"{dVar}_e")
+            
+        self.errors = sy.symbols(errorSymbols)
+        
+        self.divs = []
+        divsE = []
+        
+        for i in range(len(dVars)):
+            div = sy.simplify(sy.diff(function, dVars[i]))
+            self.divs.append(div)
+            
+            divsE.append((div * self.errors[i])**2)
+        
+        self.errFunc = symsum(divsE)
+        
+        if tex == True:
+            self.tex()
+        if py == True:
+            self.py()
+
+        
+    def tex(self):
+        
+        expression = f"\\Delta {sy.latex(self.fSymbol)}^{{2}} = "
+        
+        for i in range(len(self.dVars)):
+            
+            expression += f"\\left({sy.latex(self.divs[i])}\\right)^{{2}} \\Delta {sy.latex(self.dVars[i])}^2"
+            
+            if i + 1 != len(self.dVars):
+                expression += " + \n"
+        
+        print(f"\nLatex Expression: \n\n {expression}")
+        
+    def py(self):
+        
+        print("\nPython expression(s):\n")
+        functions = ["sin", "cos", "tan", "sqrt", "asin", "acos", "atan"]
+        
+        for i in range(len(self.dVars)):
+            
+            expression = f"({self.divs[i]}) * {self.dVars[i]}Err"
+            
+            for function in functions:
+                if expression.find(function) != -1:
+                    expression = expression.replace(function, f"np.{function}")
+            
+            print(expression + "\n")
+    
+    def rtrn(self):
+        return sy.sqrt(self.errFunc), self.errors
 
 # =============================================================================
 # csv to latex table converter
