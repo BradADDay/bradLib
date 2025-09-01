@@ -1,4 +1,6 @@
+LICENSE.txt
 README.md
+setup.cfg
 setup.py
 bradLib/__init__.py
 bradLib/bradLib.py
