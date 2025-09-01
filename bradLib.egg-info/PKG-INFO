@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bradLib
-Version: 0.0.0
+Version: 1.2.0
 Summary: Bradley Day's personal library
 Home-page: https://github.com/BradADDay/bradLib
 Author: Bradley Day
@@ -11,8 +11,9 @@ Classifier: License :: OSI Approved :: MIT License
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 Requires-Dist: matplotlib==3.10.3
-Requires-Dist: numpy==2.3.1
+Requires-Dist: numpy==2.3.2
 Requires-Dist: pandas==2.3.0
+Requires-Dist: sympy==1.14.0
 Dynamic: author
 Dynamic: classifier
 Dynamic: description
