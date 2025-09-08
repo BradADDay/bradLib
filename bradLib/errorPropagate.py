@@ -77,13 +77,18 @@ def evalEquation(equation, inputs, evalNumeric=False):
 
 
 class multipleEquations():
-    """A"""
-    def __init__(self, equations, constants={}):
+    """"""
+    def __init__(self, equations, constants={}, propagate=True, freeVars = True):
         self.equations = equations
         self.constants = constants
         
-    def freeVars(self):
+        if propagate:
+            self.errorPropagation()
+        if freeVars:
+            self.freeVars()
         
+    def freeVars(self):
+        """Pulls all free variables from the input equations"""
         rhsVariables = np.array([])
         fixedVariables = np.array([])
         indices = np.array([])
@@ -102,7 +107,7 @@ class multipleEquations():
             self.freeVariables = np.delete(rhsVariables, indices)
         
     def errorPropagation(self):
-        
+        """Finds the error propagation expression for the input equations"""
         errorTerms = []
         
         for equation in self.equations:
@@ -113,7 +118,7 @@ class multipleEquations():
         self.equations = np.append(self.equations, errorTerms)
         
     def evalEquations(self, inputs):
-        
+        """Evaluates all input equations based on inputs"""
         values = inputs
         values.update(self.constants)
         
@@ -123,7 +128,7 @@ class multipleEquations():
         return values
     
     def bulkEvalEquations(self, inputs):
-        
+        """Evaluates all input equations with multiple inputs"""
         outputs = np.array([])
         
         for i in range(0, inputs.shape[0]):
@@ -138,7 +143,7 @@ class multipleEquations():
             
     def pyPrint(self):
         
-        functions = ["sin", "cos", "tan", "sqrt", "asin", "acos", "atan"]
+        functions = ["sin", "cos", "tan", "sqrt", "asin", "acos", "atan", "exp"]
         
         for equation in self.equations:
             equation = str(equation)
