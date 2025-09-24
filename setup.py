@@ -8,7 +8,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="bradLib",
-    version="1.3.1",
+    version="1.3.2",
     license="MIT",
     description="""Bradley Day's personal library""",
     long_description=long_description,
