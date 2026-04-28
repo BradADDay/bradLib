@@ -1,4 +1,6 @@
 
+# A bibtex handling script, inspired by https://github.com/NayanDusoruth/NayanGeneralUtils/tree/main/NayanGeneralUtils
+
 import pandas as pd
 import bibtexparser as bp
 import os
